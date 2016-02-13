@@ -30,6 +30,14 @@ server.on('request', function(req, res) {
             res.write("Counter Reset");
             res.end();
             break;
+        case 'background.jpg':
+            fs.readFile('background.jpg', function(err, data) {
+                if (err) throw err;
+                res.writeHead(200, { 'Content-Type': 'image/jpeg'});
+                res.write(data);
+                res.end();
+            });
+            break;
         default:
             fs.readFile('display.html', 'utf-8', function(err, data) {
                 res.writeHead(200, { 'Content-Type': 'text/html'});
