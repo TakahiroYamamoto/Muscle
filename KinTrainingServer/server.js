@@ -27,6 +27,12 @@ server.on('request', function(req, res) {
             res.write(JSON.stringify(counter));
             res.end();
             break;
+        case 'reset':
+            counter = { 'device1': 0, 'device2': 0 };
+            res.writeHead(200, { 'Content-Type': 'text/plain'});
+            res.write("Counter Reset");
+            res.end();
+            break;
         default:
             fs.readFile('display.html', 'utf-8', function(err, data) {
                 res.writeHead(200, { 'Content-Type': 'text/html'});
