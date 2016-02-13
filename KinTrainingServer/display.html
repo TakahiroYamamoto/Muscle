@@ -3,18 +3,94 @@
 <head>
     <meta lang="ja">
     <title>counter page</title>
+    <style type="text/css">
+    .box {
+        display: table-cell;
+    }
+    </style>
 </head>
 <body>
-    <p id='device1'><p>
-    <p id='device2'><p>
-    <button id='reset'>Reset</button>
+    <div >
+        <div style="display: inline-block;" >
+            <div class="box">
+                <canvas id="lineChart1" width="500" height="500"></canvas>
+                <div id='counter1' align="center" style="font-size: 100pt;font-family: impact;">100</div>
+            </div>
+            <div class="box" id="reset">
+                <svg width="300" height="300" viewBox="0 0 100 100">
+                    <g>
+                    <title>Layer 1</title>
+                    <path id="svg_3" d="m245.5,108.950012" opacity="0.5" stroke-width="1.5" stroke="#000" fill="#fff"/>
+                    <path id="svg_8" d="m50.828739,0.383747l6.1255,22.307449l18.21096,-15.60407l-2.317757,23.246881l23.508675,-5.732107l-13.575432,19.425474l16.88652,4.458305l-17.217636,9.871964l14.899872,12.419571l-19.535378,1.910698l1.986649,17.833229l-14.237656,-8.916611l-4.966625,17.19632l-9.27103,-14.330269l-13.244324,14.648727l-3.311085,-19.743935l-15.562088,12.738022l2.979979,-19.425484c0.165552,0.302536 -12.747671,-0.015923 -13.078778,-0.015923c-0.331108,0 12.251004,-11.464211 12.085452,-11.766743c0.165552,0.302532 -20.363158,-6.703373 -20.528712,-7.005901c0.165554,0.302528 16.058749,-7.977184 15.893195,-8.27972c0.165554,0.302536 -10.429909,-11.79858 -10.595462,-12.101112c0.165553,0.302532 14.403209,3.487038 14.237653,3.184502c0.165556,0.302536 -4.801069,-18.48604 -4.966624,-18.788572c0.165555,0.302532 14.072103,9.856045 14.734315,9.856045c0.662218,0 0.662218,-20.062378 0.496662,-20.364911c0.165556,0.302532 10.098804,16.543503 9.933247,16.240975c0.165558,0.302528 11.79108,-24.395066 9.050285,-23.989933c2.372898,-0.0513 0.202312,0.408679 1.379623,0.727129z" stroke-width="1.5" stroke="#000000" fill="#8B4D4B"/>
+                    <text transform="matrix(1.29572, 0, 0, 1.29572, -5.17527, -9.45487)" xml:space="preserve" text-anchor="start" font-family="'Trebuchet MS', Gadget, sans-serif" font-size="20" id="svg_9" y="52.798787" x="14.92816" stroke-width="0" stroke="#000000" fill="#ffffff">Battle</text>
+                    </g>
+                </svg>
+            </div>
+            <div class="box">
+                <canvas id="lineChart2" width="500" height="500"></canvas>
+                <div id='counter2' align="center" style="font-size: 100pt;font-family: impact;">100</div>
+            <div>
+        </div>
+    </div>
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
     <script>
         $(function() {
+            var data = [
+                [
+                    {
+                        value: 0,
+                        color:"#F5FF00",
+                        highlight: "#F5FF00",
+                        label: "Red"
+                    },
+                    {
+                        value: 1000,
+                        color: "#949A01",
+                        highlight: "#949A01",
+                        label: "Green"
+                    },
+                ],
+                [
+                    {
+                        value: 0,
+                        color:"#FF009D",
+                        highlight: "#FF009D",
+                        label: "Yellow"
+                    },
+                    {
+                        value: 1000,
+                        color: "#99025F",
+                        highlight: "#99025F",
+                        label: "Pink"
+                    },
+                ]
+            ];
+
+            var ctx = [
+                document.getElementById("lineChart1").getContext("2d"),
+                document.getElementById("lineChart2").getContext("2d")
+            ];
+            var options = { animationSteps : 15, animation: false };
+            var pieChart = [
+                new Chart(ctx[0]).Pie(data[0], options),
+                new Chart(ctx[1]).Pie(data[1], options)
+            ];
+            
+            var limit = 1000;
+        
             setInterval(function() {
                 $.getJSON('/json', function(json) {
-                    $('#device1').text("device1: " + json.device1);
-                    $('#device2').text("device2: " + json.device2);
+                    $('#counter1').text(json.device1);
+                    $('#counter2').text(json.device2);
+                    
+                    pieChart[0].segments[0].value = json.device1;
+                    pieChart[0].segments[1].value = limit - json.device1;
+                    pieChart[0].update();
+                    
+                    pieChart[1].segments[0].value = json.device2;
+                    pieChart[1].segments[1].value = limit - json.device2;
+                    pieChart[1].update();
                 })
             }, 33);
             $('#reset').click(function() {
@@ -22,5 +98,8 @@
             });
         });
     </script>
+  
+
+</script>
 </body>
 </html>
