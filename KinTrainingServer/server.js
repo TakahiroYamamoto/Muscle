@@ -74,5 +74,5 @@ server.on('request', function(req, res) {
 
 var ip = getIPAddress();
 console.log("local IP address: " + ip);
-server.listen(1000, ip);
+server.listen(50000, ip);
 console.log("server listening...");
