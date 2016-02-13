@@ -42,22 +42,36 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
     /**
-     * サーバコネクトテストドライバ
-     * 山田以外はスルーでお願いします
-     * Yahoo相手にGETでレスポンス200、HTMLの応答確認済み
+     * サーバーアクセス用フィールド
+     * （とりあえず、ここでいいのか・・・？）
+     */
+    private final String SERVER_URL = "http://10.10.55.237:1000/";
+    private final String DEVICE1    = "device1";
+    private final String DEVICE2    = "device2";
+
+    /**
+     * サーバコネクトテストドライバ兼HowToUse
+     * サーバのカウントアップ確認済み
+     * とりあえず onCreate から呼んでいます
      */
     private void testServerConnector(){
 
         ServerConnector serverConnector = new ServerConnector();
+
+        // アクセス先URL作成
+        String dev1 = SERVER_URL + DEVICE1;
+        String dev2 = SERVER_URL + DEVICE2;
+
         URL url = null;
         try {
-            url = new URL("https://www.google.co.jp/");
+            url = new URL(dev2);
         }catch (java.net.MalformedURLException e){
             Log.v("Main", "URL Error");
         }
 
+        // 対象デバイスのカウントアップリクエスト開始
         serverConnector.execute(url);
-
     }
 }
