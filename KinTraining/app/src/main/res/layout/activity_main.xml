@@ -9,8 +9,42 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.yakiniku.kintraining.MainActivity">
 
-    <TextView
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:text="プレイヤー1"
+        android:id="@+id/buttonPlayer1"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="プレイヤー2"
+        android:id="@+id/buttonPlayer2"
+        android:layout_alignTop="@+id/buttonPlayer1"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="!!! バトル スタート !!!"
+        android:id="@+id/buttonStartButtle"
+        android:layout_marginTop="94dp"
+        android:layout_below="@+id/buttonPlayer1"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="終了"
+        android:id="@+id/buttonEnd"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 </RelativeLayout>
