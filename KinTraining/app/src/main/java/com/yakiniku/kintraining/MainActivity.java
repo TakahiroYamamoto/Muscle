@@ -3,25 +3,30 @@ package com.yakiniku.kintraining;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
-import com.yakiniku.kintraining.connect.ServerConnector;
 import com.yakiniku.kintraining.measure.AccManager;
 
-import java.net.URL;
-
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // testServerConnector();
-
+        // マネージャー初期化
         this.manager = new AccManager((SensorManager)getSystemService(SENSOR_SERVICE));
+
+        // プレイヤー情報をマネージャーから取得
+        player = this.manager.getPlayer();
+        changeButtonColor(player);
+
+        // リスナー登録
+        findViewById(R.id.buttonPlayer1).setOnClickListener(this);
+        findViewById(R.id.buttonPlayer2).setOnClickListener(this);
     }
 
     @Override
@@ -46,40 +51,45 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.buttonPlayer1:
+                // プレイヤー1に切り替え
+                manager.setPlayer(AccManager.PLAYERS.P1);
+                changeButtonColor(manager.getPlayer());
+                break;
+            case R.id.buttonPlayer2:
+                // プレイヤー2に切り替え
+                manager.setPlayer(AccManager.PLAYERS.P2);
+                changeButtonColor(manager.getPlayer());
+                break;
+        }
+    }
+
+    private void changeButtonColor(AccManager.PLAYERS p){
+        Button btn1 = (Button)findViewById(R.id.buttonPlayer1);
+        Button btn2 = (Button)findViewById(R.id.buttonPlayer2);
+        switch (p){
+            case P1:
+                // 1Pは黄色
+                btn1.setTextColor(0xFFF5FF00);
+                btn2.setTextColor(0xFFFFFFFF);
+                break;
+            case P2:
+                // 2Pはピンク
+                btn1.setTextColor(0xFFFFFFFF);
+                btn2.setTextColor(0xFFFF009D);
+                break;
+        }
+    }
+
     /**
      * 加速度マネージャ
      */
     private AccManager manager;
-
     /**
-     * サーバーアクセス用フィールド
-     * （とりあえず、ここでいいのか・・・？）
+     * プレイヤーID
      */
-    private final String SERVER_URL = "http://10.10.55.237:1000/";
-    private final String DEVICE1    = "device1";
-    private final String DEVICE2    = "device2";
-
-    /**
-     * サーバコネクトテストドライバ兼HowToUse
-     * サーバのカウントアップ確認済み
-     * とりあえず onCreate から呼んでいます
-     */
-    private void testServerConnector(){
-
-        ServerConnector serverConnector = new ServerConnector();
-
-        // アクセス先URL作成
-        String dev1 = SERVER_URL + DEVICE1;
-        String dev2 = SERVER_URL + DEVICE2;
-
-        URL url = null;
-        try {
-            url = new URL(dev1);
-        }catch (java.net.MalformedURLException e){
-            Log.v("Main", "URL Error");
-        }
-
-        // 対象デバイスのカウントアップリクエスト開始
-        serverConnector.execute(url);
-    }
+    private AccManager.PLAYERS player;
 }

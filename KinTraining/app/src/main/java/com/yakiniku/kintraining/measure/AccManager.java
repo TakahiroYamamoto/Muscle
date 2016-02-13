@@ -7,6 +7,8 @@ import android.util.Log;
 
 import com.yakiniku.kintraining.connect.ServerConnector;
 
+import org.apache.http.conn.scheme.PlainSocketFactory;
+
 import java.net.URL;
 import java.util.List;
 
@@ -19,7 +21,16 @@ public class AccManager  implements SensorEventListener{
     private float mx,my,mz;
     private float vx,vy,vz;
     private int counter;
-    private ServerConnector connector;
+
+    /**
+     * プレイヤー情報
+     */
+    public enum PLAYERS { P1, P2 }
+    private PLAYERS player;
+    public void setPlayer(PLAYERS p){
+        player = p;
+    }
+    public PLAYERS getPlayer(){ return player; }
 
     public AccManager(SensorManager manager) {
         ax = ay = az = 0;
@@ -34,6 +45,9 @@ public class AccManager  implements SensorEventListener{
             Sensor s = sensors.get(0);
             manager.registerListener(this, s, SensorManager.SENSOR_DELAY_UI);
         }
+
+        // 生成時点ではプレイヤー1固定とする
+        player = PLAYERS.P1;
     }
 
     public void stop() {
@@ -60,34 +74,40 @@ public class AccManager  implements SensorEventListener{
                 counter++;
 
                 // サーバーカウントアップ
-                {
-                    // 動作検証用にMainActivityからコピー
-                    // ちょっとこの辺リファクタリングしたいです・・・
-                    String SERVER_URL = "http://10.10.55.237:1000/";
-                    String DEVICE1    = "device1";
-                    String DEVICE2    = "device2";
-
-                    ServerConnector serverConnector = new ServerConnector();
-
-                    // アクセス先URL作成
-                    String dev1 = SERVER_URL + DEVICE1;
-                    String dev2 = SERVER_URL + DEVICE2;
-
-                    URL url = null;
-                    try {
-                        url = new URL(dev1);
-                    } catch (java.net.MalformedURLException e) {
-                        Log.v("Main", "URL Error");
-                    }
-
-                    // 対象デバイスのカウントアップリクエスト開始
-                    serverConnector.execute(url);
-                }
+                serverCountUp();
             }
 
             mx = ax;
             my = ay;
             mz = az;
         }
+    }
+
+    private void serverCountUp(){
+        String SERVER_URL       = "http://10.10.55.237:1000/";
+        final String DEVICE1    = "device1";
+        final String DEVICE2    = "device2";
+
+        ServerConnector serverConnector = new ServerConnector();
+
+        // アクセス先URL作成
+        switch (player){
+            case P1:
+                SERVER_URL += DEVICE1;
+                break;
+            case P2:
+                SERVER_URL += DEVICE2;
+                break;
+        }
+
+        URL url = null;
+        try {
+            url = new URL(SERVER_URL);
+        } catch (java.net.MalformedURLException e) {
+            Log.v("Main", "URL Error");
+        }
+
+        // 対象デバイスのカウントアップリクエスト開始
+        serverConnector.execute(url);
     }
 }
