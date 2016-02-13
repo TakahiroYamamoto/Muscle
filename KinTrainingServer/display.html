@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta lang="ja">
+    <title>counter page</title>
+</head>
+<body>
+    <p id='device1'><p>
+    <p id='device2'><p>
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script>
+        $(function() {
+            $('p').css('color', 'red');
+            var counter = 0;
+            setInterval(function() {
+                counter++;
+                $.getJSON('/json', function(json) {
+                    $('#device1').text("device1: " + json.device1);
+                    $('#device2').text("device2: " + json.device2);
+                })
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
