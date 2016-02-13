@@ -61,12 +61,14 @@
                         value: 0,
                         color:"#F5FF00",
                         highlight: "#F5FF00",
+                        strokeColor: "#00000000",
                         label: "Red"
                     },
                     {
                         value: 1000,
                         color: "#949A01",
                         highlight: "#949A01",
+                        strokeColor: "#00000000",
                         label: "Green"
                     },
                 ],
@@ -75,12 +77,14 @@
                         value: 0,
                         color:"#FF009D",
                         highlight: "#FF009D",
+                        strokeColor: "#00000000",
                         label: "Yellow"
                     },
                     {
                         value: 1000,
                         color: "#99025F",
                         highlight: "#99025F",
+                        strokeColor: "#00000000",
                         label: "Pink"
                     },
                 ]
@@ -96,7 +100,7 @@
                 new Chart(ctx[1]).Pie(data[1], options)
             ];
             
-            var limit = 1000;
+            var limit = 500;
         
             setInterval(function() {
                 $.getJSON('/json', function(json) {
@@ -110,6 +114,13 @@
                     pieChart[1].segments[0].value = json.device2;
                     pieChart[1].segments[1].value = limit - json.device2;
                     pieChart[1].update();
+                    
+                    if (json.device1 > limit || json.device2 > limit) {
+                        $.get('/reset', function(data, status, XHR) {
+                            if (json.device1 > limit) window.location.href = '/win1.html';
+                            if (json.device2 > limit) window.location.href = '/win2.html';
+                        });
+                    }
                 })
             }, 33);
             $('#reset').click(function() {

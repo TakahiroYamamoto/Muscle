@@ -38,6 +38,15 @@ server.on('request', function(req, res) {
                 res.end();
             });
             break;
+        case 'win1.html':
+        case 'win2.html':
+            fs.readFile(path, function(err, data) {
+                if (err) throw err;
+                res.writeHead(200, { 'Content-Type': 'text/html'});
+                res.write(data);
+                res.end();
+            });
+            break;
         default:
             fs.readFile('display.html', 'utf-8', function(err, data) {
                 res.writeHead(200, { 'Content-Type': 'text/html'});
