@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.yakiniku.kintraining.connect.ServerConnector;
 
+import java.net.URL;
 import java.util.List;
 
 /**
@@ -20,14 +21,13 @@ public class AccManager  implements SensorEventListener{
     private int counter;
     private ServerConnector connector;
 
-    public AccManager(SensorManager manager , ServerConnector connector) {
+    public AccManager(SensorManager manager) {
         ax = ay = az = 0;
         mx = my = mz = 0;
         vx = vy = vz = 0;
         counter = 0;
 
         this.manager = manager;
-        this.connector = connector;
 
         List<Sensor> sensors = manager.getSensorList(Sensor.TYPE_ACCELEROMETER);
         if(sensors.size() > 0) {
@@ -58,7 +58,33 @@ public class AccManager  implements SensorEventListener{
             if(vz < -15.0 || 15.0 < vz) { // 速度が大きい時
                 Log.d("TAG", "count up : " + counter);
                 counter++;
+
+                // サーバーカウントアップ
+                {
+                    // 動作検証用にMainActivityからコピー
+                    // ちょっとこの辺リファクタリングしたいです・・・
+                    String SERVER_URL = "http://10.10.55.237:1000/";
+                    String DEVICE1    = "device1";
+                    String DEVICE2    = "device2";
+
+                    ServerConnector serverConnector = new ServerConnector();
+
+                    // アクセス先URL作成
+                    String dev1 = SERVER_URL + DEVICE1;
+                    String dev2 = SERVER_URL + DEVICE2;
+
+                    URL url = null;
+                    try {
+                        url = new URL(dev1);
+                    } catch (java.net.MalformedURLException e) {
+                        Log.v("Main", "URL Error");
+                    }
+
+                    // 対象デバイスのカウントアップリクエスト開始
+                    serverConnector.execute(url);
+                }
             }
+
             mx = ax;
             my = ay;
             mz = az;

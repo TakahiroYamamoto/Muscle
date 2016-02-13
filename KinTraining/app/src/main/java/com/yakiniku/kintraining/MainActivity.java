@@ -1,5 +1,6 @@
 package com.yakiniku.kintraining;
 
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -7,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.yakiniku.kintraining.connect.ServerConnector;
+import com.yakiniku.kintraining.measure.AccManager;
 
 import java.net.URL;
 
@@ -18,6 +20,8 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         // testServerConnector();
+
+        this.manager = new AccManager((SensorManager)getSystemService(SENSOR_SERVICE));
     }
 
     @Override
@@ -42,6 +46,10 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * 加速度マネージャ
+     */
+    private AccManager manager;
 
     /**
      * サーバーアクセス用フィールド
@@ -66,7 +74,7 @@ public class MainActivity extends ActionBarActivity {
 
         URL url = null;
         try {
-            url = new URL(dev2);
+            url = new URL(dev1);
         }catch (java.net.MalformedURLException e){
             Log.v("Main", "URL Error");
         }
