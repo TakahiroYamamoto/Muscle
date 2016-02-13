@@ -4,9 +4,6 @@ var server = http.createServer();
 
 var counter = { 'device1': 0, 'device2': 0 };
 
-var rawJSON = '{"name":"test", "age":29}';
-var personJSON = JSON.parse(rawJSON); 
-
 function printCounter(device, counter, res) {
     res.writeHead(200, {'Content-Type': 'text/plain'});
     res.write('hello world from ' + device);
