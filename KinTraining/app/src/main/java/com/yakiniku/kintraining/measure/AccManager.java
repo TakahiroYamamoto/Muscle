@@ -69,17 +69,29 @@ public class AccManager  implements SensorEventListener{
             az = event.values[SensorManager.DATA_Z];
             vz = az - mz;
 
-            if(vz < -15.0 || 15.0 < vz) { // 速度が大きい時
+            double naiseki = ax*mx + ay*my + az*mz;
+            double len_a = Math.sqrt(ax*ax + ay*ay + az*az);
+            double len_b = Math.sqrt(mx*mx + my*my + mz*mz);
+
+            mx = ax;
+            my = ay;
+            mz = az;
+
+            if(len_a == 0 || len_b == 0){
+                return;
+            }
+            double gaiseki = naiseki / ( len_a * len_b );
+            double kakudo = Math.acos(gaiseki) * 180 / 3.14;
+
+            Log.d("TAG", "角度 : " + kakudo);
+
+            if(90.0 < kakudo) { // 前回から加速度の方向が大きく変わった時
                 Log.d("TAG", "count up : " + counter);
                 counter++;
 
                 // サーバーカウントアップ
                 serverCountUp();
             }
-
-            mx = ax;
-            my = ay;
-            mz = az;
         }
     }
 
