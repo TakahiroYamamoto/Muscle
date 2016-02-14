@@ -21,12 +21,17 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         this.manager = new AccManager((SensorManager)getSystemService(SENSOR_SERVICE));
 
         // プレイヤー情報をマネージャーから取得
-        player = this.manager.getPlayer();
+        this.player = this.manager.getPlayer();
         changeButtonColor(player);
 
         // リスナー登録
         findViewById(R.id.buttonPlayer1).setOnClickListener(this);
         findViewById(R.id.buttonPlayer2).setOnClickListener(this);
+        findViewById(R.id.buttonStartButtle).setOnClickListener(this);
+        findViewById(R.id.buttonEnd).setOnClickListener(this);
+
+        // 全ボタン状態初期化
+        enableButtons();
     }
 
     @Override
@@ -64,6 +69,14 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                 manager.setPlayer(AccManager.PLAYERS.P2);
                 changeButtonColor(manager.getPlayer());
                 break;
+            case R.id.buttonStartButtle:
+                // 停止ボタン以外無効化
+                disableButtons();
+                break;
+            case R.id.buttonEnd:
+                // 停止ボタンだけ無効化
+                enableButtons();
+                break;
         }
     }
 
@@ -82,6 +95,22 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                 btn2.setTextColor(0xFFFF009D);
                 break;
         }
+    }
+
+    private void disableButtons(){
+        findViewById(R.id.buttonPlayer1).setEnabled(false);
+        findViewById(R.id.buttonPlayer2).setEnabled(false);
+        findViewById(R.id.buttonStartButtle).setEnabled(false);
+        // 停止ボタン以外無効化
+        findViewById(R.id.buttonEnd).setEnabled(true);
+    }
+
+    private void enableButtons(){
+        findViewById(R.id.buttonPlayer1).setEnabled(true);
+        findViewById(R.id.buttonPlayer2).setEnabled(true);
+        findViewById(R.id.buttonStartButtle).setEnabled(true);
+        // 停止ボタンだけ無効化
+        findViewById(R.id.buttonEnd).setEnabled(false);
     }
 
     /**

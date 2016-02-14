@@ -30,7 +30,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="!!! バトル スタート !!!"
+        android:text="アクティビティのボタン封じ"
         android:id="@+id/buttonStartButtle"
         android:layout_marginTop="94dp"
         android:layout_below="@+id/buttonPlayer1"
@@ -42,7 +42,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="終了"
+        android:text="アクティビティのボタン封じ解除"
         android:id="@+id/buttonEnd"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
