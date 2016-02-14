@@ -28,8 +28,8 @@ public class ServerConnector extends AsyncTask<URL, Void, String> {
         try {
             Log.v(TAG, url[0].toString());
             conn = (HttpURLConnection) url[0].openConnection();
-            conn.setReadTimeout(10000);
-            conn.setConnectTimeout(15000);
+            conn.setReadTimeout(1000);
+            conn.setConnectTimeout(1000);
             conn.setRequestMethod("GET");
             conn.setDoInput(true);
             conn.connect();

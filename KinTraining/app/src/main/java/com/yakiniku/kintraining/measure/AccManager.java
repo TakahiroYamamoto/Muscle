@@ -32,7 +32,22 @@ public class AccManager  implements SensorEventListener{
     }
     public PLAYERS getPlayer(){ return player; }
 
-    public AccManager(SensorManager manager) {
+    /**
+     * IPアドレス
+     */
+    private String ipaddress;
+    public void setIpAddress(String ip){
+        ipaddress = ip;
+        Log.d("TAG", ipaddress);
+    }
+    public String getIpAddress(){ return ipaddress; }
+
+    /**
+     * ポート番号
+     */
+    private String port;
+
+    public AccManager(SensorManager manager, String ip, String po) {
         ax = ay = az = 0;
         mx = my = mz = 0;
         vx = vy = vz = 0;
@@ -48,6 +63,10 @@ public class AccManager  implements SensorEventListener{
 
         // 生成時点ではプレイヤー1固定とする
         player = PLAYERS.P1;
+
+        // とりあえず初期値
+        ipaddress = ip;
+        port = po;
     }
 
     public void stop() {
@@ -83,7 +102,7 @@ public class AccManager  implements SensorEventListener{
             double gaiseki = naiseki / ( len_a * len_b );
             double kakudo = Math.acos(gaiseki) * 180 / 3.14;
 
-            Log.d("TAG", "角度 : " + kakudo);
+            // Log.d("TAG", "角度 : " + kakudo);
 
             if(90.0 < kakudo) { // 前回から加速度の方向が大きく変わった時
                 Log.d("TAG", "count up : " + counter);
@@ -96,7 +115,7 @@ public class AccManager  implements SensorEventListener{
     }
 
     private void serverCountUp(){
-        String SERVER_URL       = "http://10.10.55.237:1000/";
+        String SERVER_URL       = "http://" + ipaddress +  ":" + port +  "/";
         final String DEVICE1    = "device1";
         final String DEVICE2    = "device2";
 

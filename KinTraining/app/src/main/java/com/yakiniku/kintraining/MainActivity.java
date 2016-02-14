@@ -7,6 +7,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.yakiniku.kintraining.measure.AccManager;
 
@@ -17,8 +19,14 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // IP初期化
+        this.ipaddress = "10.10.51.170";    // アドレス。とりあえず開発スペースでの値
+        this.port = "50000"; // ポートは50000固定
+        this.editText = ((EditText)findViewById(R.id.editTextIp));
+        this.editText.setText(this.ipaddress);
+
         // マネージャー初期化
-        this.manager = new AccManager((SensorManager)getSystemService(SENSOR_SERVICE));
+        this.manager = new AccManager((SensorManager)getSystemService(SENSOR_SERVICE), this.ipaddress, this.port);
 
         // プレイヤー情報をマネージャーから取得
         this.player = this.manager.getPlayer();
@@ -29,6 +37,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         findViewById(R.id.buttonPlayer2).setOnClickListener(this);
         findViewById(R.id.buttonStartButtle).setOnClickListener(this);
         findViewById(R.id.buttonEnd).setOnClickListener(this);
+        findViewById(R.id.buttonIpUpdate).setOnClickListener(this);
 
         // 全ボタン状態初期化
         enableButtons();
@@ -76,6 +85,11 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
             case R.id.buttonEnd:
                 // 停止ボタンだけ無効化
                 enableButtons();
+            case R.id.buttonIpUpdate:
+                // IPアドレス更新
+                this.ipaddress = this.editText.getText().toString();
+                this.manager.setIpAddress(this.ipaddress);
+                Toast.makeText(this, "IP更新しました" + this.manager.getIpAddress(),  Toast.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -101,6 +115,8 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         findViewById(R.id.buttonPlayer1).setEnabled(false);
         findViewById(R.id.buttonPlayer2).setEnabled(false);
         findViewById(R.id.buttonStartButtle).setEnabled(false);
+        findViewById(R.id.editTextIp).setEnabled(false);
+        findViewById(R.id.buttonIpUpdate).setEnabled(false);
         // 停止ボタン以外無効化
         findViewById(R.id.buttonEnd).setEnabled(true);
     }
@@ -109,6 +125,8 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         findViewById(R.id.buttonPlayer1).setEnabled(true);
         findViewById(R.id.buttonPlayer2).setEnabled(true);
         findViewById(R.id.buttonStartButtle).setEnabled(true);
+        findViewById(R.id.editTextIp).setEnabled(true);
+        findViewById(R.id.buttonIpUpdate).setEnabled(true);
         // 停止ボタンだけ無効化
         findViewById(R.id.buttonEnd).setEnabled(false);
     }
@@ -121,4 +139,10 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
      * プレイヤーID
      */
     private AccManager.PLAYERS player;
+    /**
+     * 接続先IPアドレス
+     */
+    private String ipaddress;
+    private String port;
+    private EditText editText;
 }
