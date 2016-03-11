@@ -2348,6 +2348,12 @@ img {
   height: auto;
 }
 
+.img-responsive2 {
+  display: block;
+  max-width: 45%;
+  height: auto;
+}
+
 .img-rounded {
   border-radius: 4px;
 }
